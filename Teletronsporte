@@ -1,0 +1,79 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MOD 10000
+int N;
+int Adj[101][101], res[101][101], Adj_c[101][101];
+
+void GG()
+{
+	int C[101][101];
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+			C[i][j] = 0;
+            for (int k = 0; k < N; k++)
+            {
+                C[i][j] += (Adj[i][k] * Adj_c[k][j]);
+                C[i][j] %= MOD;
+            }
+            Adj[i][j] = C[i][j];
+        }
+    }
+}
+
+void GR()
+{
+	int C[101][101];
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+			C[i][j] = 0;
+            for (int k = 0; k < N; k++)
+            {
+                C[i][j] += (res[i][k] * Adj[k][j]);
+                C[i][j] %= MOD;
+            }
+            res[i][j] = C[i][j];
+        }
+    }
+}
+
+int main()
+{
+    memset (res, 0, sizeof res);
+    memset (Adj, 0, sizeof (Adj));
+
+    int k, x, y, t;
+
+    scanf("%d %d", &N, &k);
+    scanf ("%d %d", &x, &y);
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            scanf ("%d", &t);
+            Adj[i][t-1] ++;
+            Adj_c[i][t-1] = Adj[i][t-1];
+        }
+    }
+    
+    for (int i = 0; i < N; i++) res[i][i] = 1;
+
+    while (k)
+    {
+        if (k % 2) 
+        {
+			GR();
+		}
+		
+        GG();
+        k = k / 2;
+    }
+
+    printf ("%d\n", res[x-1][y-1]);
+}
